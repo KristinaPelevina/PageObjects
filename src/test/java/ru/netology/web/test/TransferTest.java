@@ -22,8 +22,26 @@ public class TransferTest {
         verificationPage.validVerify(verificationCode);
 
     }
+
     @Test
     @Order(1)
+    void shouldTransferMoneyFromSecondToFirst() {
+        val dashboardPage = new DashboardPage();
+        val amount = 500;
+        val expectedBalanceOfFirstCard = dashboardPage.getCurrentBalanceOfFirstCard();
+        val expectedBalanceOfSecondCard = dashboardPage.getCurrentBalanceOfSecondCard();
+        val transferPage = dashboardPage.transferToFirstCard();
+        val transferInfo = getSecondCardNumber();
+        transferPage.moneyTransfer(transferInfo, amount);
+        val balanceOfFirstCard = getExpectedBalanceIfBalanceIncreased(expectedBalanceOfFirstCard, amount);
+        val balanceOfSecondCard = getExpectedBalanceIfBalanceDecreased(expectedBalanceOfSecondCard, amount);
+        val finalBalanceOfFirstCard = dashboardPage.getCurrentBalanceOfFirstCard();
+        val finalBalanceOfSecondCard = dashboardPage.getCurrentBalanceOfSecondCard();
+        assertEquals(balanceOfFirstCard, finalBalanceOfFirstCard);
+        assertEquals(balanceOfSecondCard, finalBalanceOfSecondCard);
+    }
+    @Test
+    @Order(2)
     void shouldTransferMoneyFromFirstToSecond() {
         val dashboardPage = new DashboardPage();
         val amount = 1000;
@@ -39,24 +57,6 @@ public class TransferTest {
         assertEquals(balanceOfSecondCard, finalBalanceOfSecondCard);
         assertEquals(balanceOfFirstCard, finalBalanceOfFirstCard);
 
-    }
-
-    @Test
-    @Order(2)
-    void shouldTransferMoneyFromSecondToFirst() {
-        val dashboardPage = new DashboardPage();
-        val amount = 500;
-        val expectedBalanceOfFirstCard = dashboardPage.getCurrentBalanceOfFirstCard();
-        val expectedBalanceOfSecondCard = dashboardPage.getCurrentBalanceOfSecondCard();
-        val transferPage = dashboardPage.transferToFirstCard();
-        val transferInfo = getSecondCardNumber();
-        transferPage.moneyTransfer(transferInfo, amount);
-        val balanceOfFirstCard = getExpectedBalanceIfBalanceIncreased(expectedBalanceOfFirstCard, amount);
-        val balanceOfSecondCard = getExpectedBalanceIfBalanceDecreased(expectedBalanceOfSecondCard, amount);
-        val finalBalanceOfFirstCard = dashboardPage.getCurrentBalanceOfFirstCard();
-        val finalBalanceOfSecondCard = dashboardPage.getCurrentBalanceOfSecondCard();
-        assertEquals(balanceOfFirstCard, finalBalanceOfFirstCard);
-        assertEquals(balanceOfSecondCard, finalBalanceOfSecondCard);
     }
 
     @Test
